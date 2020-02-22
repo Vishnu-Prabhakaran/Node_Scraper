@@ -1,6 +1,7 @@
-const request = require('request-promise');
+//const request = require('request-promise');
 const cheerio = require('cheerio');
 const ObjectsToCsv = require('objects-to-csv');
+const request = require('requestretry').defaults({ fullResponse: false });
 
 const url = 'https://melbourne.craigslist.org/d/jobs/search/jjj';
 const scrapResults = [];
