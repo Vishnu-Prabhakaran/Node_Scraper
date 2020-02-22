@@ -1,5 +1,6 @@
 const request = require('request-promise');
 const cheerio = require('cheerio');
+const ObjectsToCsv = require('objects-to-csv');
 
 const url = 'https://melbourne.craigslist.org/d/jobs/search/jjj';
 const scrapResults = [];
@@ -14,11 +15,10 @@ async function scrapeHeader() {
       const title = resultTitle.text();
       const url = resultTitle.attr('href');
       // new Date () - to make a javascript object
-      const datePosted = new Date(
-        $(element)
-          .children('time')
-          .attr('datetime')
-      );
+      const datePosted = $(element)
+        .children('time')
+        .attr('datetime');
+
       const hood = $(element)
         .find('.result-hood')
         .text();
@@ -49,7 +49,6 @@ async function scrapeDescription(jobsWithHeaders) {
           .text();
         job.description = compensationText.replace('compensation: ', '');
         return job;
-        
       } catch (error) {
         console.log(error);
       }
@@ -57,10 +56,20 @@ async function scrapeDescription(jobsWithHeaders) {
   );
 }
 
+// Save data to CSV
+async function createCsvfile(data) {
+  let csv = new ObjectsToCsv(data);
+  // Save to file
+  await csv.toDisk('./ScrapedResults.csv');
+  // Return the CSV file as string
+  // console.log(await csv.toString);
+}
+
 async function scrapeCraigsList() {
   const jobsWithHeaders = await scrapeHeader();
   const jobsFullData = await scrapeDescription(jobsWithHeaders);
-  console.log(jobsFullData);
+  // console.log(jobsFullData);
+  await createCsvfile(jobsFullData);
 }
 
 scrapeCraigsList();
