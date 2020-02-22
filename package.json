@@ -1,5 +1,5 @@
 {
-  "name": "Node_Scraper",
+  "name": "node_scraper",
   "version": "1.0.0",
   "description": "Scraping only using node",
   "main": "index.js",
